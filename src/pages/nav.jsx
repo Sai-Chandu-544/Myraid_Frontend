@@ -11,7 +11,7 @@ export const Navbar = () => {
 
   const checkAuth = async () => {
     try {
-      await axios.get("http://localhost:2000/api/user/me", {
+     await axios.get(`${import.meta.env.VITE_API_BASE_URL}/me`, {
         withCredentials: true
       });
 
@@ -27,7 +27,7 @@ export const Navbar = () => {
 
   const handleLogout = async () => {
     await axios.post(
-      "http://localhost:2000/api/user/logout",
+      `${import.meta.env.VITE_API_BASE_URL}/logout`,
       {},
       { withCredentials: true }
     );
