@@ -26,16 +26,21 @@ export const Navbar = () => {
   }, [location]);
 
   const handleLogout = async () => {
+  try {
     await axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/logout`,
       {},
       { withCredentials: true }
     );
 
-    setIsLoggedIn(false);
+    setIsLoggedIn(false);   // update navbar state
     navigate("/login");
-  };
 
+    checkAuth(); // re-check authentication
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
+};
   const activeStyle = ({ isActive }) =>
     isActive
       ? "text-blue-600 font-semibold"

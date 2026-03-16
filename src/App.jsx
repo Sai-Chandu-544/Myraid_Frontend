@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./pages/nav";
 import { Toaster } from "react-hot-toast";
 import { TaskDetails } from "./dashboard/TaskDetails";
+import { ProtectedRoute } from "./components/protectedRoutes";
+import { PublicRoute } from "./components/publicRoute";
 
 function App() {
 
@@ -23,13 +25,19 @@ function App() {
 
           {/* Public Pages */}
           <Route path="/" element={<TaskMasterLanding />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<PublicRoute>
+              <Login />
+            </PublicRoute>} />
+          <Route path="/register" element={ <PublicRoute>
+              <Register />
+            </PublicRoute>} />
 
           {/* Dashboard Layout */}
           <Route path="/dashboard" element={<DashboardLayout />}>
 
-            <Route index element={<Dashboard />} />
+            <Route index element={ <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>} />
 
             <Route path="create-task" element={<CreateNewTask />} />
 
