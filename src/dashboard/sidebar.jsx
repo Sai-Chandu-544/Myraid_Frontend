@@ -1,4 +1,4 @@
-import { LayoutGrid, FolderOpen, Users, Settings } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 
 const NavItem = ({ icon: Icon, label, active, onClick }) => (
   <button
@@ -14,43 +14,66 @@ const NavItem = ({ icon: Icon, label, active, onClick }) => (
   </button>
 );
 
-export const Sidebar = ({ activeNav, setActiveNav }) => {
+export const Sidebar = ({
+  activeNav,
+  setActiveNav,
+  sidebarOpen,
+  setSidebarOpen,
+}) => {
 
   const navItems = [
     { icon: LayoutGrid, label: "Dashboard" },
-    // { icon: FolderOpen, label: "Projects" },
-    // { icon: Users, label: "Team" },
-    // { icon: Settings, label: "Settings" },
   ];
 
   return (
-    <aside className="w-[220px] bg-white border-r border-slate-100 flex flex-col py-5 px-3">
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-      {/* Brand */}
-      <div className="flex items-center gap-3 px-3 mb-8">
-        <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
-          <LayoutGrid size={18} className="text-white" />
+      {/* Sidebar */}
+      <aside
+        className={`fixed md:static top-0 left-0 h-full w-[220px] bg-white border-r border-slate-100 flex flex-col py-5 px-3 z-50 transform transition-transform duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+      >
+
+        {/* Brand */}
+        <div className="flex items-center gap-3 px-3 mb-8">
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
+            <LayoutGrid size={18} className="text-white" />
+          </div>
+
+          <div>
+            <p className="text-[13px] font-bold text-slate-800">
+              TaskMaster
+            </p>
+            <p className="text-[10px] text-slate-400">
+              Management Suite
+            </p>
+          </div>
         </div>
 
-        <div>
-          <p className="text-[13px] font-bold text-slate-800">TaskMaster</p>
-          <p className="text-[10px] text-slate-400">Management Suite</p>
-        </div>
-      </div>
+        {/* Navigation */}
+        <nav className="flex flex-col gap-1">
+          {navItems.map(({ icon, label }) => (
+            <NavItem
+              key={label}
+              icon={icon}
+              label={label}
+              active={activeNav === label}
+              onClick={() => {
+                setActiveNav(label);
+                setSidebarOpen(false);
+              }}
+            />
+          ))}
+        </nav>
 
-      {/* Nav */}
-      <nav className="flex flex-col gap-1">
-        {navItems.map(({ icon, label }) => (
-          <NavItem
-            key={label}
-            icon={icon}
-            label={label}
-            active={activeNav === label}
-            onClick={() => setActiveNav(label)}
-          />
-        ))}
-      </nav>
-
-    </aside>
+      </aside>
+    </>
   );
 };
