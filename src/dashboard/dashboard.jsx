@@ -139,6 +139,7 @@ const doneCount = tasks.filter(
   const { open, setOpen } = useTaskContext();
 
   const handleOpen = () => setOpen(prev => !prev);
+  
   const navigate = useNavigate();
 
   const toggleTask = (id) => {
