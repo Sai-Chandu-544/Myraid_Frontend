@@ -3,6 +3,8 @@ import { CheckCircle2 } from "lucide-react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
+import {logout} from "../Api/ApiRequests"
+
 export const Navbar = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,37 +12,44 @@ export const Navbar = () => {
   const location = useLocation();
 
   const checkAuth = async () => {
-    try {
-     await axios.get(`${import.meta.env.VITE_API_BASE_URL}/me`, {
-        withCredentials: true
-      });
+  try {
 
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/me`,
+      { withCredentials: true }
+    );
+
+    if (res.status === 200) {
       setIsLoggedIn(true);
-    } catch {
+    }
+
+  } catch (error) {
+
+    if (error.response?.status === 401) {
       setIsLoggedIn(false);
     }
-  };
+
+  }
+};
 
   useEffect(() => {
     checkAuth();
   }, [location]);
 
-  const handleLogout = async () => {
+ const handleLogout = async () => {
   try {
-    await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/logout`,
-      {},
-      { withCredentials: true }
-    );
 
-    setIsLoggedIn(false);   // update navbar state
-    navigate("/login");
+    await logout();
 
-    checkAuth(); // re-check authentication
+    setIsLoggedIn(false);
+
+    navigate("/login", { replace: true });
+
   } catch (error) {
     console.error("Logout failed", error);
   }
 };
+
   const activeStyle = ({ isActive }) =>
     isActive
       ? "text-blue-600 font-semibold"

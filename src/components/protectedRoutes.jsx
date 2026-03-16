@@ -1,31 +1,37 @@
-// components/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const ProtectedRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
+
+  const [isAuth, setIsAuth] = useState(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
+
+    const check = async () => {
+
       try {
-        await axios.get(`${import.meta.env.VITE_API_BASE_URL}/me`, {
-          withCredentials: true,
-        });
+
+        await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/me`,
+          { withCredentials: true }
+        );
 
         setIsAuth(true);
+
       } catch {
+
         setIsAuth(false);
-      } finally {
-        setLoading(false);
+
       }
+
     };
 
-    checkAuth();
+    check();
+
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (isAuth === null) return null;
 
   return isAuth ? children : <Navigate to="/login" replace />;
 };
